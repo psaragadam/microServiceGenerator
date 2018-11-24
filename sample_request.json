@@ -1,0 +1,34 @@
+{
+  "downloadDetails": {
+    "jarDownload": true,
+    "vcsDownload": true,
+    "zipDownload": true
+  },
+  "integrationDetails": {
+    "hasJPA": true,
+    "hasJunit": true,
+    "hasSwagger": true,
+    "restTemplate": true
+  },
+  "models": [
+    {
+	  "jsonFormat": true,
+      "modelName": "customer",
+      "serialize": true,
+      "entity": true,
+      "fields": [
+        {
+          "fieldName": "name",
+          "fieldType": "string",
+          "required": true
+        }
+      ]      
+    }
+  ],
+  "projectDetails": {
+    "buildToolName": "maven",
+    "buildType": "jar",
+    "packageName": "town",
+    "projectName": "Town"
+  }
+}
