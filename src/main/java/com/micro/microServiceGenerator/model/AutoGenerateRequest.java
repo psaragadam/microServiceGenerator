@@ -13,7 +13,7 @@ public class AutoGenerateRequest {
 	// project download details
 	private ProjectDownloadRequest downloadDetails;
 	//JPA Properties
-	private String jpaProperties;
+	private DBPropertiesRequest jpaProperties;
 	
 	public ProjectDetailsRequest getProjectDetails() {
 		return projectDetails;
@@ -47,12 +47,13 @@ public class AutoGenerateRequest {
 		this.downloadDetails = downloadDetails;
 	}
 
-	public String getJpaProperties() {
+	public DBPropertiesRequest getJpaProperties() {
 		return jpaProperties;
 	}
 
-	public void setJpaProperties(String jpaProperties) {
+	public void setJpaProperties(DBPropertiesRequest jpaProperties) {
 		this.jpaProperties = jpaProperties;
 	}
+
 
 }

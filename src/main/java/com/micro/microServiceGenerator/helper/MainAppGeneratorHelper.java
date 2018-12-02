@@ -18,9 +18,9 @@ public class MainAppGeneratorHelper {
 		try {
 			String className = projectName.substring(0, 1).toUpperCase() + projectName.substring(1) +"MainApplication";
 			List<String> lines = Arrays.asList("package com." + packageName + ";",
-					"\n\n import org.springframework.boot.SpringApplication;\r\n"
+					"\n\nimport org.springframework.boot.SpringApplication;\r\n"
 							+ "import org.springframework.boot.autoconfigure.SpringBootApplication;\n\n",
-					"@SpringBootApplication\n", "public class " + className + " {\n\n", bodyGenerator(className),
+					"@SpringBootApplication", "public class " + className + " {\n\n", bodyGenerator(className),
 					"\n}");
 			Path file = Paths.get("./target/"+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/" + className + ".java");
 
@@ -32,9 +32,9 @@ public class MainAppGeneratorHelper {
 
 	private static String bodyGenerator(String projectName) {
 		StringBuilder build = new StringBuilder();
-		build.append("public static void main(String[] args) {\r\n");
-		build.append("\tSpringApplication.run(" + projectName + ".class, args);\r\n");
-		build.append("	}");
+		build.append("\t public static void main(String[] args) {\r\n");
+		build.append("\t\t SpringApplication.run(" + projectName + ".class, args);\r\n");
+		build.append("\t }");
 		return build.toString();
 	}
 
