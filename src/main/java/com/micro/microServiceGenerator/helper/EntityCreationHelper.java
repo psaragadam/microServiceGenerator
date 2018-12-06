@@ -38,12 +38,13 @@ public class EntityCreationHelper {
 		List<Field> fieldsForMethods = new ArrayList<Field>();
 		for (Field field : properties) {
 			String type = field.getFieldType().substring(0, 1).toUpperCase() + field.getFieldType().substring(1);
-			build.append("\t @Column \n");
+			build.append("\t @Column");
 			if (field.isHavingRelation()) {
-				build.append("\t @" + field.getRelationType() + "\n");
-				build.append("\t @JoinColumn(name=\"" + field.getJoinColumn() + "\")\n");
+				build.delete(build.lastIndexOf("@"), build.lastIndexOf("n") + 1);
+				build.append("@" + field.getRelationType() + "\n");
+				build.append("\t @JoinColumn(name=\"" + field.getJoinColumn() + "\")");
 			}
-			build.append("\t private " + type + " " + field.getFieldName() + ";\n");
+			build.append("\n\t private " + type + " " + field.getFieldName() + ";\n");
 			fieldsForMethods.add(field);
 		}
 		build.append("\n\n");
