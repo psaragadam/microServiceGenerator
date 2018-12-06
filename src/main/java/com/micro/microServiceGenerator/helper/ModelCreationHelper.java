@@ -18,7 +18,7 @@ public class ModelCreationHelper {
 	public static void generateModels(String projectName, String packageName, String modelName, List<Field> property) {
 		try {
 			String className = modelName.substring(0, 1).toUpperCase()+ modelName.substring(1);
-			List<String> lines = Arrays.asList("package com."+packageName+".domain;", "\n", "public class " + className + " {\n\n",
+			List<String> lines = Arrays.asList("package com."+packageName+".domain;\n", "import java.util.*;\n", "public class " + className + " {\n\n",
 					propertyGenerator(property, false), "\n}");
 			Path file = Paths.get("./target/"+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/domain/" + className + ".java"); 
 			Files.write(file, lines, Charset.forName("UTF-8"));

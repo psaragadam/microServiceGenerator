@@ -64,6 +64,7 @@ public class ControllerGenerateHelper {
 		build.append(buildCreateMethod(packageName,  className,  modelName));
 		build.append(buildGetMethod(packageName,  className,  modelName));
 		build.append(buildUpdateMethod(packageName,  className,  modelName));
+		build.append(buildDeleteMethod(packageName,  className,  modelName));
 		build.append("\n}\n");
 		return build;
 	}
@@ -102,15 +103,33 @@ public class ControllerGenerateHelper {
 	
 	
 	private static StringBuilder buildGetMethod(String packageName, String className, String modelName) {
-		String methodName= "find"+ className;
-		String serviceInstanceName= modelName +"Service";
-		String field="id";
+		String methodName = "find" + className;
+		String serviceInstanceName = modelName + "Service";
+		String field = "id";
 		String filedType = "String";
 		StringBuilder build = new StringBuilder();
 		build.append("\t @RequestMapping(value=\"/get\", method=RequestMethod.GET) \r\n");
 		build.append("\t public " + className  +" "+ methodName +"("+ filedType + " " + field+") {\n");
 		build.append("\t\t Long uid = Long.valueOf(" + field + ");\n");
 		build.append("\t\t return ");
+		build.append(serviceInstanceName);
+		build.append(".");
+		build.append(methodName);
+		build.append("(uid);\n");
+		build.append("\t}\n\n");
+		return build;
+	}
+	
+	private static StringBuilder buildDeleteMethod(String packageName, String className, String modelName) {
+		String methodName = "delete" + className;
+		String serviceInstanceName = modelName + "Service";
+		String field = "id";
+		String filedType = "String";
+		StringBuilder build = new StringBuilder();
+		build.append("\t @RequestMapping(value=\"/delete\", method=RequestMethod.DELETE) \r\n");
+		build.append("\t public void "+ methodName +"("+ filedType + " " + field+") {\n");
+		build.append("\t\t Long uid = Long.valueOf(" + field + ");\n");
+		build.append("\t\t ");
 		build.append(serviceInstanceName);
 		build.append(".");
 		build.append(methodName);

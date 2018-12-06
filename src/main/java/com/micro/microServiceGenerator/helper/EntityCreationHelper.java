@@ -19,12 +19,14 @@ public class EntityCreationHelper {
 
 	private static String importGenerator() {
 		StringBuilder build = new StringBuilder();
-		build.append("\n\nimport javax.persistence.Column;\n");
+		build.append("\n\nimport java.util.*;\n");
+		build.append("import javax.persistence.*;\n\n");
+		/*build.append("\n\nimport javax.persistence.Column;\n");
 		build.append("import javax.persistence.Entity;\n");
 		build.append("import javax.persistence.GeneratedValue;\n");
 		build.append("import javax.persistence.GenerationType;\n");
 		build.append("import javax.persistence.Id;\n");
-		build.append("import javax.persistence.Table;\n\n");
+		build.append("import javax.persistence.Table;\n\n");*/
 		return build.toString();
 	}
 
@@ -37,6 +39,10 @@ public class EntityCreationHelper {
 		for (Field field : properties) {
 			String type = field.getFieldType().substring(0, 1).toUpperCase() + field.getFieldType().substring(1);
 			build.append("\t @Column \n");
+			if (field.isHavingRelation()) {
+				build.append("\t @" + field.getRelationType() + "\n");
+				build.append("\t @JoinColumn(name=\"" + field.getJoinColumn() + "\")\n");
+			}
 			build.append("\t private " + type + " " + field.getFieldName() + ";\n");
 			fieldsForMethods.add(field);
 		}

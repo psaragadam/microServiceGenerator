@@ -28,9 +28,12 @@
 					"required": true
 				},
 				{
-					"fieldName": "address",
-					"fieldType": "address",
-					"required": true
+					"fieldName": "addresses",
+					"fieldType": "list",
+					"required": true,
+					"havingRelation" : true,
+					"relationType": "OneToMany",
+					"joinColumn" : "uid"
 				}
 			]
 		},

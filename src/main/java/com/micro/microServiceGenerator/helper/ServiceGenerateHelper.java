@@ -59,6 +59,7 @@ public class ServiceGenerateHelper {
 		build.append(buildCreateMethod(packageName, className, modelName));
 		build.append(buildGetMethod(packageName, className, modelName));
 		build.append(buildUpdateMethod(packageName, className, modelName));
+		build.append(buildDeleteMethod(packageName, className, modelName));
 		build.append("\n}\n");
 		return build;
 	}
@@ -75,9 +76,9 @@ public class ServiceGenerateHelper {
 	}
 	
 	private static StringBuilder buildGetMethod(String packageName, String className, String modelName) {
-		String methodName= "find"+ className;
-		String repo= modelName+"Repository";
-		String field="id";
+		String methodName = "find" + className;
+		String repo = modelName+"Repository";
+		String field = "id";
 		String filedType = "Long";
 		StringBuilder build = new StringBuilder();
 		build.append("\t public " + className  +" "+ methodName +"("+ filedType + " " + field+") {\n");
@@ -95,6 +96,18 @@ public class ServiceGenerateHelper {
 		build.append("\t public " + className + " " + methodName + "(" + className + " " + modelName + ") {\n");
 		build.append("\t\t " + repo + ".save(" + modelName + ");\n");
 		build.append("\t\t return " + modelName + ";\n");
+		build.append("\t}\n\n");
+		return build;
+	}
+	
+	private static StringBuilder buildDeleteMethod(String packageName, String className, String modelName) {
+		String methodName = "delete"+ className;
+		String repo = modelName + "Repository";
+		String field = "id";
+		String filedType = "Long";
+		StringBuilder build = new StringBuilder();
+		build.append("\t public void "+ methodName +"("+ filedType + " " + field+") {\n");
+		build.append("\t\t " + repo + ".deleteById(" + field + ");\n");
 		build.append("\t}\n\n");
 		return build;
 	}
