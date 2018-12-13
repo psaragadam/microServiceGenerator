@@ -15,7 +15,7 @@ public class ControllerGenerateHelper {
 			String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 			String packageNameValue = "package com." + packageName + ".controller;";
 			StringBuilder imports = buildImports(packageName, className);
-			StringBuilder classDef = buildClassDef(packageName, className,modelName );
+			StringBuilder classDef = buildClassDef(packageName, className, modelName );
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
 			Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/" + packageName
@@ -57,64 +57,84 @@ public class ControllerGenerateHelper {
 		String serviceInstanceName= modelName +"Service";
 		StringBuilder build = new StringBuilder();
 		build.append("@RestController\r\n");
-		build.append("@RequestMapping(\"/api/" + modelName + " \")\r\n");
+		build.append("@RequestMapping(\"/api/" + modelName + "\")\r\n");
 		build.append("public class " + className + "Controller {\n\n");
-		build.append("@Autowired\n");
-		build.append("private "+serviceName + " "+ serviceInstanceName +";\n\n");
+		build.append("\t @Autowired\n");
+		build.append("\t private "+serviceName + " "+ serviceInstanceName +";\n\n");
 		build.append(buildCreateMethod(packageName,  className,  modelName));
 		build.append(buildGetMethod(packageName,  className,  modelName));
 		build.append(buildUpdateMethod(packageName,  className,  modelName));
+		build.append(buildDeleteMethod(packageName,  className,  modelName));
 		build.append("\n}\n");
 		return build;
 	}
 	
 	
 	private static StringBuilder buildCreateMethod(String packageName, String className, String modelName) {
-		String methodName= " create"+ className;
+		String methodName= "create"+ className;
 		String serviceInstanceName= modelName +"Service";
 		StringBuilder build = new StringBuilder();
-		build.append("@RequestMapping(value=\"/create\", method=RequestMethod.POST) \r\n");
-		build.append("public  " + className  +" "+ methodName +"(@RequestBody "+ className +" "+ modelName+"){\n\n");
-		build.append("return ");
+		build.append("\t @RequestMapping(value=\"/create\", method=RequestMethod.POST) \r\n");
+		build.append("\t public " + className  +" "+ methodName +"(@RequestBody "+ className +" "+ modelName+") {\n");
+		build.append("\t\t return ");
 		build.append(serviceInstanceName);
 		build.append(".");
 		build.append(methodName);
 		build.append("("+ modelName+");\n");
-		build.append("}\n\n");
+		build.append("\t}\n\n");
 		return build;
 	}
 	
 	private static StringBuilder buildUpdateMethod(String packageName, String className, String modelName) {
-		String methodName= " update"+ className;
+		String methodName= "update"+ className;
 		String serviceInstanceName= modelName +"Service";
 		StringBuilder build = new StringBuilder();
-		build.append("@RequestMapping(value=\"/update\", method=RequestMethod.PUT) \r\n");
-		build.append("public  " + className  +" "+ methodName +"(@RequestBody "+ className +" "+ modelName+"){\n\n");
-		build.append("return ");
+		build.append("\t @RequestMapping(value=\"/update\", method=RequestMethod.PUT) \r\n");
+		build.append("\t public " + className  +" "+ methodName +"(@RequestBody "+ className +" "+ modelName+") {\n");
+		build.append("\t\t return ");
 		build.append(serviceInstanceName);
 		build.append(".");
 		build.append(methodName);
 		build.append("("+ modelName+");\n");
-		build.append("}\n\n");
+		build.append("\t}\n\n");
 		return build;
 	}
 	
 	
 	
 	private static StringBuilder buildGetMethod(String packageName, String className, String modelName) {
-		String methodName= " find"+ className;
-		String serviceInstanceName= modelName +"Service";
-		String filed="field";
+		String methodName = "find" + className;
+		String serviceInstanceName = modelName + "Service";
+		String field = "id";
 		String filedType = "String";
 		StringBuilder build = new StringBuilder();
-		build.append("@RequestMapping(value=\"/get\", method=RequestMethod.GET) \r\n");
-		build.append("public " + className  +" "+ methodName +"("+ filedType + "  " + filed+"){\n\n");
-		build.append("return ");
+		build.append("\t @RequestMapping(value=\"/get\", method=RequestMethod.GET) \r\n");
+		build.append("\t public " + className  +" "+ methodName +"("+ filedType + " " + field+") {\n");
+		build.append("\t\t Long uid = Long.valueOf(" + field + ");\n");
+		build.append("\t\t return ");
 		build.append(serviceInstanceName);
 		build.append(".");
 		build.append(methodName);
-		build.append("("+ filed+");\n");
-		build.append("}\n\n");
+		build.append("(uid);\n");
+		build.append("\t}\n\n");
+		return build;
+	}
+	
+	private static StringBuilder buildDeleteMethod(String packageName, String className, String modelName) {
+		String methodName = "delete" + className;
+		String serviceInstanceName = modelName + "Service";
+		String field = "id";
+		String filedType = "String";
+		StringBuilder build = new StringBuilder();
+		build.append("\t @RequestMapping(value=\"/delete\", method=RequestMethod.DELETE) \r\n");
+		build.append("\t public void "+ methodName +"("+ filedType + " " + field+") {\n");
+		build.append("\t\t Long uid = Long.valueOf(" + field + ");\n");
+		build.append("\t\t ");
+		build.append(serviceInstanceName);
+		build.append(".");
+		build.append(methodName);
+		build.append("(uid);\n");
+		build.append("\t}\n\n");
 		return build;
 	}
 	

@@ -14,28 +14,27 @@ import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 
 
 public class JPAGenerateHelper {
+	
 
 	public static void generateRespository(String projectName, String packageName,
 			AutoGenerateRequest autoGenerateRequest) {
 
-		StringBuilder builder = new StringBuilder();
-		String className = null;
-		String repoClassName = null;
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
-			className = model.getModelName().substring(0, 1).toUpperCase() + model.getModelName().substring(1);
-			repoClassName = className + "Repository";
+			StringBuilder builder = new StringBuilder();
+			String className = model.getModelName().substring(0, 1).toUpperCase() + model.getModelName().substring(1);
+			String repoClassName = className + "Repository";
 			builder.append("package com." + packageName + ".repository;\n\n");
 			builder.append("import org.springframework.data.repository.CrudRepository;\r\n");
 			builder.append("import org.springframework.stereotype.Repository;\r\n");
-			builder.append("import com." + packageName + ".entity. " + className + ";\n\n");
+			builder.append("import com." + packageName + ".entity." + className + ";\n\n");
 			builder.append("@Repository\r\n");
 			builder.append("public interface ");
 			builder.append(repoClassName);
 			builder.append(" extends CrudRepository<");
 			builder.append(className);
-			builder.append(", Long >");
+			builder.append(", Long>");
 			builder.append(" { \r\n\n\n");
-			builder.append(" }\r\n");
+			builder.append("}\r\n");
 			try {
 				List<String> lines = Arrays.asList(builder.toString());
 

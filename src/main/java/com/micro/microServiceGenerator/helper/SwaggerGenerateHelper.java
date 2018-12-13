@@ -29,7 +29,7 @@ public class SwaggerGenerateHelper {
 					"\r\n" + 
 					"@Configuration\r\n" + 
 					"@EnableSwagger2\r\n" + 
-					"public class SwaggerConfig {                                    \r\n" + 
+					"public class SwaggerConfig {\r\n\n" + 
 					"    @Bean\r\n" + 
 					"    public Docket api() { \r\n" + 
 					"        return new Docket(DocumentationType.SWAGGER_2)  \r\n" + 
