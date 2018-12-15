@@ -52,28 +52,33 @@ public class AutoGeneratorService {
 		// Micro service main App
 		MainAppGeneratorHelper.generateMainApplication(projectName, packageName);
 		//Application properties file 
-		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,autoGenerateRequest.getJpaProperties());
+		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA());
 	}
 
 	private static void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
 			String packageName) {
+		boolean hasJPA = autoGenerateRequest.getIntegrationDetails().isHasJPA();
 		// Micro service main model, service, controller generation
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
 			ModelCreationHelper.generateModels(projectName, packageName, model.getModelName(), model.getFields());
 			// Controller generator
-			ControllerGenerateHelper.generateController(projectName, packageName, model.getModelName());
+			ControllerGenerateHelper.generateController(projectName, packageName, model.getModelName(), hasJPA);
 			// Service generator
-			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName());
+			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName(), hasJPA);
 		}
 		//Entity generator
-		EntityCreationHelper.generateModels(autoGenerateRequest);
+		if (hasJPA) {
+			EntityCreationHelper.generateModels(autoGenerateRequest);
+		}
 	}
 
 	private static void buildIntegrationServices(String projectName, String packageName,AutoGenerateRequest autoGenerateRequest) {
 		// SWAGGER config generator changes
 		SwaggerGenerateHelper.generateSwagger(projectName, packageName);
 		// JPA
-		JPAGenerateHelper.generateRespository(projectName, packageName, autoGenerateRequest);
+		if (autoGenerateRequest.getIntegrationDetails().isHasJPA()) {
+			JPAGenerateHelper.generateRespository(projectName, packageName, autoGenerateRequest);
+		}
 	}
 
 	private static void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,

@@ -10,12 +10,12 @@ import java.util.List;
 
 public class ServiceGenerateHelper {
 
-	public static void generateService(String projectName, String packageName, String modelName) {
+	public static void generateService(String projectName, String packageName, String modelName, boolean hasJPA) {
 		try {
 			String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 			String packageNameValue = "package com." + packageName + ".service;";
-			StringBuilder imports = buildImports(packageName, className);
-			StringBuilder classDef = buildClassDef(packageName, className, modelName);
+			StringBuilder imports = buildImports(packageName, className, hasJPA);
+			StringBuilder classDef = buildClassDef(packageName, className, modelName, hasJPA);
 
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
@@ -28,48 +28,60 @@ public class ServiceGenerateHelper {
 		}
 	}
 
-	public static String generateControllerDisplay(String projectName, String packageName, String modelName) {
+	public static String generateControllerDisplay(String projectName, String packageName, String modelName, boolean hasJPA) {
 		String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 		String packageNameValue = "package com." + packageName + ".service;";
-		StringBuilder imports = buildImports(packageName, className);
-		StringBuilder classDef = buildClassDef(packageName, className, modelName);
+		StringBuilder imports = buildImports(packageName, className, hasJPA);
+		StringBuilder classDef = buildClassDef(packageName, className, modelName, hasJPA);
 		return packageNameValue + " \n" + imports.toString() + "\n" + classDef.toString();
 	}
 
-	private static StringBuilder buildImports(String packageName, String className) {
+	private static StringBuilder buildImports(String packageName, String className, boolean hasJPA) {
 		StringBuilder build = new StringBuilder();
-		String repo = className + "Repository";
-		build.append("\nimport com." + packageName + ".entity." + className + ";\r\n");
-		build.append("import com." + packageName + ".repository." + repo + ";\r\n");
+		if (hasJPA) {
+			String repo = className + "Repository";
+			build.append("\nimport com." + packageName + ".entity." + className + ";\r\n");
+			build.append("import com." + packageName + ".repository." + repo + ";\r\n");
+			build.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
+		} else {
+			build.append("\nimport com." + packageName + ".domain." + className + ";\r\n");
+		}
 		build.append("import org.springframework.stereotype.Service;\r\n");
-		build.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
+		
 		return build;
 	}
 
-	private static StringBuilder buildClassDef(String packageName, String className, String modelName) {
+	private static StringBuilder buildClassDef(String packageName, String className, String modelName, boolean hasJPA) {
 		String serviceName = className + "Service";
-		String repo = className + "Repository";
 		StringBuilder build = new StringBuilder();
 		build.append("@Service\r\n");
 		build.append("public class " + serviceName + " {\n\n");
-		build.append("\n\t @Autowired");
-		build.append("\n\t private " + repo);
-		build.append("  ");
-		build.append(modelName + "Repository;\n\n\n");
-		build.append(buildCreateMethod(packageName, className, modelName));
-		build.append(buildGetMethod(packageName, className, modelName));
-		build.append(buildUpdateMethod(packageName, className, modelName));
-		build.append(buildDeleteMethod(packageName, className, modelName));
+		if (hasJPA) {
+			String repo = className + "Repository";
+			build.append("\n\t @Autowired");
+			build.append("\n\t private " + repo);
+			build.append(" ");
+			build.append(modelName + "Repository;\n\n\n");
+		}
+		build.append(buildCreateMethod(packageName, className, modelName, hasJPA));
+		if (hasJPA) {
+			build.append(buildGetMethod(packageName, className, modelName));
+			build.append(buildUpdateMethod(packageName, className, modelName));
+			build.append(buildDeleteMethod(packageName, className, modelName));
+		}
+		
 		build.append("\n}\n");
 		return build;
 	}
-
-	private static StringBuilder buildCreateMethod(String packageName, String className, String modelName) {
+	
+	private static StringBuilder buildCreateMethod(String packageName, String className, String modelName, boolean hasJPA) {
 		String methodName = "create" + className;
-		String repo = modelName + "Repository";
 		StringBuilder build = new StringBuilder();
 		build.append("\t public " + className + " " + methodName + "(" + className + " " + modelName + ") {\n\t\t");
-		build.append(repo + ".save(" + modelName + ");\n\t\t");
+		if (hasJPA) {
+			String repo = modelName + "Repository";
+			build.append(repo + ".save(" + modelName + ");\n\t\t");
+		}
 		build.append("return " + modelName + ";\n");
 		build.append("\t}\n\n");
 		return build;
@@ -113,7 +125,7 @@ public class ServiceGenerateHelper {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(generateControllerDisplay("Town", "town", "person"));
+		System.out.println(generateControllerDisplay("Town", "town", "person", true));
 	}
 
 }
