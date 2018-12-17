@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
+import com.micro.microServiceGenerator.helper.ApplicationConfigGenerateHelper;
 import com.micro.microServiceGenerator.helper.ApplicationPropertiesGenerateHelper;
 import com.micro.microServiceGenerator.helper.ControllerGenerateHelper;
 import com.micro.microServiceGenerator.helper.EntityCreationHelper;
@@ -24,7 +25,6 @@ import com.micro.microServiceGenerator.helper.ZipDirectoryHelper;
 import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 
-
 @Service
 public class AutoGeneratorService {
 
@@ -33,26 +33,28 @@ public class AutoGeneratorService {
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 
 		// build project folder project structure and mainApp
-		buildMainServices(projectName, packageName,  autoGenerateRequest );
+		buildMainServices(projectName, packageName, autoGenerateRequest);
 
 		// Micro service main model, service, controller generation
 		buildModuleServices(autoGenerateRequest, projectName, packageName);
-				
+
 		// Micro service JPA and other integration details
-		buildIntegrationServices(projectName, packageName, autoGenerateRequest);
+		buildIntegrationServices(autoGenerateRequest);
 
 		generateZip(response, autoGenerateRequest, projectName, packageName);
 	}
 
-	private static void buildMainServices(String projectName, String packageName, AutoGenerateRequest autoGenerateRequest) {
+	private static void buildMainServices(String projectName, String packageName,
+			AutoGenerateRequest autoGenerateRequest) {
 		// project directory generation
 		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName);
 		// pom.xml generation
-		PomGeneratorHelper.generatePomFile(projectName, packageName);
+		PomGeneratorHelper.generatePomFile(autoGenerateRequest);
 		// Micro service main App
 		MainAppGeneratorHelper.generateMainApplication(projectName, packageName);
-		//Application properties file 
-		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA());
+		// Application properties file
+		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,
+				autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA());
 	}
 
 	private static void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
@@ -66,19 +68,22 @@ public class AutoGeneratorService {
 			// Service generator
 			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName(), hasJPA);
 		}
-		//Entity generator
+		// Entity generator
 		if (hasJPA) {
 			EntityCreationHelper.generateModels(autoGenerateRequest);
 		}
 	}
 
-	private static void buildIntegrationServices(String projectName, String packageName,AutoGenerateRequest autoGenerateRequest) {
-		// SWAGGER config generator changes
-		SwaggerGenerateHelper.generateSwagger(projectName, packageName);
+	private static void buildIntegrationServices(AutoGenerateRequest autoGenerateRequest) {
 		// JPA
 		if (autoGenerateRequest.getIntegrationDetails().isHasJPA()) {
-			JPAGenerateHelper.generateRespository(projectName, packageName, autoGenerateRequest);
+			JPAGenerateHelper.generateRespository(autoGenerateRequest);
 		}
+		/*// SWAGGER config generator changes
+		if (autoGenerateRequest.getIntegrationDetails().isHasSwagger()) {
+			SwaggerGenerateHelper.generateSwagger(autoGenerateRequest.getProjectDetails().getProjectName(), autoGenerateRequest.getProjectDetails().getPackageName());
+		}*/
+		ApplicationConfigGenerateHelper.generateConfig(autoGenerateRequest);
 	}
 
 	private static void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
