@@ -29,7 +29,7 @@ public class PomGeneratorHelper {
 	
 	private static String buildDependencies(AutoGenerateRequest autoGenerateRequest) {
 		boolean hasJPA = autoGenerateRequest.getIntegrationDetails().isHasJPA();
-		boolean hasRest = autoGenerateRequest.getIntegrationDetails().isHasJPA();
+		boolean hasRest = autoGenerateRequest.getIntegrationDetails().isHasRestTemplate();
 		StringBuilder builder=new StringBuilder();
 		if(hasJPA) {
 			builder.append("<dependency>\n<groupId>org.springframework.boot</groupId>\n<artifactId>spring-boot-starter-data-jpa</artifactId>\n</dependency>\n");

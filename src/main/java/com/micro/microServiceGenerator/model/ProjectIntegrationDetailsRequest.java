@@ -4,7 +4,7 @@ public class ProjectIntegrationDetailsRequest {
 	private boolean hasSwagger;
 	private boolean hasJunit;
 	private boolean hasJPA;
-	private boolean restTemplate;
+	private boolean hasRestTemplate;
 
 	public boolean isHasSwagger() {
 		return hasSwagger;
@@ -30,12 +30,12 @@ public class ProjectIntegrationDetailsRequest {
 		this.hasJPA = hasJPA;
 	}
 
-	public boolean isRestTemplate() {
-		return restTemplate;
+	public boolean isHasRestTemplate() {
+		return hasRestTemplate;
 	}
 
-	public void setRestTemplate(boolean restTemplate) {
-		this.restTemplate = restTemplate;
+	public void setHasRestTemplate(boolean hasRestTemplate) {
+		this.hasRestTemplate = hasRestTemplate;
 	}
 
 }

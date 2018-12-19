@@ -29,7 +29,7 @@ public class ApplicationConfigGenerateHelper {
 
 	private static StringBuilder buildImports(AutoGenerateRequest autoGenerateRequest) {
 		boolean hasSwagger = autoGenerateRequest.getIntegrationDetails().isHasSwagger();
-		boolean hasRest = autoGenerateRequest.getIntegrationDetails().isRestTemplate();
+		boolean hasRest = autoGenerateRequest.getIntegrationDetails().isHasRestTemplate();
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 		StringBuilder builder = new StringBuilder();
 		builder.append("package com." + packageName + ".config;\n\n");
@@ -51,7 +51,7 @@ public class ApplicationConfigGenerateHelper {
 
 	private static StringBuilder buildClassDef(AutoGenerateRequest autoGenerateRequest) {
 		boolean hasSwagger = autoGenerateRequest.getIntegrationDetails().isHasSwagger();
-		boolean hasRest = autoGenerateRequest.getIntegrationDetails().isRestTemplate();
+		boolean hasRest = autoGenerateRequest.getIntegrationDetails().isHasRestTemplate();
 		StringBuilder builder = new StringBuilder();
 		builder.append("@Configuration\r\n");
 		builder.append("@EnableSwagger2\r\n");

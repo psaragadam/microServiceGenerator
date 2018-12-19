@@ -8,7 +8,7 @@
 		"hasJPA": true,
 		"hasJunit": true,
 		"hasSwagger": true,
-		"restTemplate": true
+		"hasRestTemplate": true
 	},
 	"models": [
 		{
@@ -60,7 +60,7 @@
 		"buildToolName": "maven",
 		"buildType": "jar",
 		"packageName": "customer",
-		"projectName": "customerApplication"
+		"projectName": "customerApplicationRest"
 	},
 	"jpaProperties": {
 		"url": "jdbc:mysql://localhost:3306/test?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false",

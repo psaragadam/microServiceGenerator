@@ -19,6 +19,7 @@ import com.micro.microServiceGenerator.helper.MainAppGeneratorHelper;
 import com.micro.microServiceGenerator.helper.ModelCreationHelper;
 import com.micro.microServiceGenerator.helper.PomGeneratorHelper;
 import com.micro.microServiceGenerator.helper.ProjectFolderGenerateHelper;
+import com.micro.microServiceGenerator.helper.RestServiceGeneratorHelper;
 import com.micro.microServiceGenerator.helper.ServiceGenerateHelper;
 import com.micro.microServiceGenerator.helper.SwaggerGenerateHelper;
 import com.micro.microServiceGenerator.helper.ZipDirectoryHelper;
@@ -84,6 +85,9 @@ public class AutoGeneratorService {
 			SwaggerGenerateHelper.generateSwagger(autoGenerateRequest.getProjectDetails().getProjectName(), autoGenerateRequest.getProjectDetails().getPackageName());
 		}*/
 		ApplicationConfigGenerateHelper.generateConfig(autoGenerateRequest);
+		if (autoGenerateRequest.getIntegrationDetails().isHasRestTemplate()) {
+			RestServiceGeneratorHelper.generateRestService(autoGenerateRequest.getProjectDetails().getProjectName(), autoGenerateRequest.getProjectDetails().getPackageName());
+		}
 	}
 
 	private static void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
