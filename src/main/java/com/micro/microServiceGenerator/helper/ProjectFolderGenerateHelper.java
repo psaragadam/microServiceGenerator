@@ -4,8 +4,8 @@ import java.io.File;
 
 public class ProjectFolderGenerateHelper {
 
-	public static void generateRootFolders(String projectName, String packageName) {
-		String storageLocation = "target\\"+ projectName +"\\";
+	public static void generateRootFolders(String projectName, String packageName, String location) {
+		String storageLocation = location+ projectName +"\\";
 		boolean controller = new File(
 				storageLocation + projectName + "\\src\\main\\java\\com\\" + packageName + "\\controller").mkdirs();
 		boolean domain = new File(storageLocation + projectName + "\\src\\main\\java\\com\\" + packageName + "\\domain")

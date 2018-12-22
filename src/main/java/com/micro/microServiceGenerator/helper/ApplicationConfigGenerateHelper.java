@@ -12,14 +12,14 @@ import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 
 public class ApplicationConfigGenerateHelper {
 
-	public static void generateConfig(AutoGenerateRequest autoGenerateRequest) {
+	public static void generateConfig(AutoGenerateRequest autoGenerateRequest, String location) {
 		try {
 			String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
 			String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 			StringBuilder imports = buildImports(autoGenerateRequest);
 			StringBuilder classDef = buildClassDef(autoGenerateRequest);
 			List<String> lines = Arrays.asList(imports.toString(), classDef.toString());
-			Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
 					+ "/config/ApplicationConfig.java");
 			Files.write(file, lines, Charset.forName("UTF-8"));
 		} catch (IOException e) {

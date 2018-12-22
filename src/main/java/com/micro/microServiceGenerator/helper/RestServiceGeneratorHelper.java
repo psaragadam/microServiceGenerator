@@ -10,7 +10,7 @@ import java.util.List;
 
 public class RestServiceGeneratorHelper {
 
-	public static void generateRestService(String projectName, String packageName) {
+	public static void generateRestService(String projectName, String packageName, String location) {
 		try {
 			String packageNameValue = "package com." + packageName + ".rest;";
 			StringBuilder imports = buildImports();
@@ -18,7 +18,7 @@ public class RestServiceGeneratorHelper {
 
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
-			Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
 					+ "/rest/RestService.java");
 
 			Files.write(file, lines, Charset.forName("UTF-8"));

@@ -13,14 +13,14 @@ import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 
 public class PomGeneratorHelper {
 
-	public static void generatePomFile(AutoGenerateRequest autoGenerateRequest) {
+	public static void generatePomFile(AutoGenerateRequest autoGenerateRequest, String location) {
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 		try {
 			packageName = "com." + packageName;
 			String pomXml = Files.lines(Paths.get("./src/main/resources/pom.xml")).collect(Collectors.joining("\n"));
 			pomXml = MessageFormat.format(pomXml, packageName, projectName,"jar", projectName, buildDependencies(autoGenerateRequest));
-			Path file = Paths.get("./target/" + projectName + "/"+ projectName + "/pom.xml");
+			Path file = Paths.get(location + projectName + "/"+ projectName + "/pom.xml");
 			Files.write(file, Arrays.asList(pomXml), Charset.forName("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();

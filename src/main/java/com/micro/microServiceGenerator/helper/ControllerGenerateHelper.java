@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ControllerGenerateHelper {
 	
-	public static void generateController(String projectName, String packageName, String modelName, boolean hasJPA) {
+	public static void generateController(String projectName, String packageName, String modelName, boolean hasJPA, String location) {
 		try {
 			String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 			String packageNameValue = "package com." + packageName + ".controller;";
@@ -18,7 +18,7 @@ public class ControllerGenerateHelper {
 			StringBuilder classDef = buildClassDef(packageName, className, modelName, hasJPA);
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
-			Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
 					+ "/controller/" + className + "Controller.java");
 
 			Files.write(file, lines, Charset.forName("UTF-8"));

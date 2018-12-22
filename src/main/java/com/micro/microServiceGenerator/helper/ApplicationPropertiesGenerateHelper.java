@@ -13,7 +13,7 @@ import com.micro.microServiceGenerator.model.DBPropertiesRequest;
 public class ApplicationPropertiesGenerateHelper {
 
 
-	public static void generateApplicationProperties(String projectName, DBPropertiesRequest properties, boolean hasJPA) {
+	public static void generateApplicationProperties(String projectName, DBPropertiesRequest properties, boolean hasJPA, String location) {
 		try {
 			
 			StringBuilder builder=new StringBuilder();
@@ -29,13 +29,10 @@ public class ApplicationPropertiesGenerateHelper {
 				builder.append("spring.jpa.hibernate.ddl-auto = " + properties.getDdl_Auto() + "\n");
 			}
 			List<String> lines = Arrays.asList(builder.toString());
-			Path file = Paths.get("./target/"+projectName+"/"+projectName+"/src/main/resources/application.properties");
+			Path file = Paths.get(location+projectName+"/"+projectName+"/src/main/resources/application.properties");
 			Files.write(file, lines, Charset.forName("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	
-
 }

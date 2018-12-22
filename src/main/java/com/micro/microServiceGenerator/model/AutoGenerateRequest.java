@@ -7,7 +7,7 @@ public class AutoGenerateRequest {
 	// project details
 	private ProjectDetailsRequest projectDetails;
 	// model details
-	private List<ModelDetailsRequest> models = new ArrayList<ModelDetailsRequest>();
+	private List<ModelDetailsRequest> models = new ArrayList<>();
 	// project integration details
 	private ProjectIntegrationDetailsRequest integrationDetails;
 	// project download details

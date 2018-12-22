@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ServiceGenerateHelper {
 
-	public static void generateService(String projectName, String packageName, String modelName, boolean hasJPA) {
+	public static void generateService(String projectName, String packageName, String modelName, boolean hasJPA, String location) {
 		try {
 			String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 			String packageNameValue = "package com." + packageName + ".service;";
@@ -19,7 +19,7 @@ public class ServiceGenerateHelper {
 
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
-			Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
 					+ "/service/" + className + "Service.java");
 
 			Files.write(file, lines, Charset.forName("UTF-8"));

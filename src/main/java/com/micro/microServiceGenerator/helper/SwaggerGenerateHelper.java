@@ -11,7 +11,7 @@ import java.util.List;
 public class SwaggerGenerateHelper {
 
 
-	public static void generateSwagger(String projectName, String packageName) {
+	public static void generateSwagger(String projectName, String packageName, String location) {
 		try {
 			
 			StringBuilder builder=new StringBuilder();
@@ -41,7 +41,7 @@ public class SwaggerGenerateHelper {
 					"}\n");
 			
 			List<String> lines = Arrays.asList(builder.toString());
-			Path file = Paths.get("./target/"+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/config/SwaggerConfig.java");
+			Path file = Paths.get(location +projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/config/SwaggerConfig.java");
 
 			Files.write(file, lines, Charset.forName("UTF-8"));
 		} catch (IOException e) {

@@ -28,6 +28,8 @@ import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 
 @Service
 public class AutoGeneratorService {
+	
+	private String location="./target/";
 
 	public void generateService(AutoGenerateRequest autoGenerateRequest, HttpServletResponse response) {
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
@@ -45,64 +47,69 @@ public class AutoGeneratorService {
 		generateZip(response, autoGenerateRequest, projectName, packageName);
 	}
 
-	private static void buildMainServices(String projectName, String packageName,
+	private void buildMainServices(String projectName, String packageName,
 			AutoGenerateRequest autoGenerateRequest) {
 		// project directory generation
-		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName);
+		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, "target\\");
 		// pom.xml generation
-		PomGeneratorHelper.generatePomFile(autoGenerateRequest);
+		PomGeneratorHelper.generatePomFile(autoGenerateRequest, location);
 		// Micro service main App
-		MainAppGeneratorHelper.generateMainApplication(projectName, packageName);
+		MainAppGeneratorHelper.generateMainApplication(projectName, packageName, location);
 		// Application properties file
 		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,
-				autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA());
+				autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA(),
+				location);
 	}
 
-	private static void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
+	private void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
 			String packageName) {
 		boolean hasJPA = autoGenerateRequest.getIntegrationDetails().isHasJPA();
 		// Micro service main model, service, controller generation
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
-			ModelCreationHelper.generateModels(projectName, packageName, model.getModelName(), model.getFields());
+			ModelCreationHelper.generateModels(projectName, packageName, model.getModelName(), model.getFields(),
+					location);
 			// Controller generator
-			ControllerGenerateHelper.generateController(projectName, packageName, model.getModelName(), hasJPA);
+			ControllerGenerateHelper.generateController(projectName, packageName, model.getModelName(), hasJPA,
+					location);
 			// Service generator
-			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName(), hasJPA);
+			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName(), hasJPA, location);
 		}
 		// Entity generator
 		if (hasJPA) {
-			EntityCreationHelper.generateModels(autoGenerateRequest);
+			EntityCreationHelper.generateModels(autoGenerateRequest, location);
 		}
 	}
 
-	private static void buildIntegrationServices(AutoGenerateRequest autoGenerateRequest) {
+	private void buildIntegrationServices(AutoGenerateRequest autoGenerateRequest) {
 		// JPA
 		if (autoGenerateRequest.getIntegrationDetails().isHasJPA()) {
-			JPAGenerateHelper.generateRespository(autoGenerateRequest);
+			JPAGenerateHelper.generateRespository(autoGenerateRequest, location);
 		}
-		/*// SWAGGER config generator changes
+		// SWAGGER config generator changes
 		if (autoGenerateRequest.getIntegrationDetails().isHasSwagger()) {
-			SwaggerGenerateHelper.generateSwagger(autoGenerateRequest.getProjectDetails().getProjectName(), autoGenerateRequest.getProjectDetails().getPackageName());
-		}*/
-		ApplicationConfigGenerateHelper.generateConfig(autoGenerateRequest);
+			SwaggerGenerateHelper.generateSwagger(autoGenerateRequest.getProjectDetails().getProjectName(),
+					autoGenerateRequest.getProjectDetails().getPackageName(), location);
+		}
+		ApplicationConfigGenerateHelper.generateConfig(autoGenerateRequest, location);
 		if (autoGenerateRequest.getIntegrationDetails().isHasRestTemplate()) {
-			RestServiceGeneratorHelper.generateRestService(autoGenerateRequest.getProjectDetails().getProjectName(), autoGenerateRequest.getProjectDetails().getPackageName());
+			RestServiceGeneratorHelper.generateRestService(autoGenerateRequest.getProjectDetails().getProjectName(),
+					autoGenerateRequest.getProjectDetails().getPackageName(), location);
 		}
 	}
 
-	private static void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
+	private void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
 			String projectName, String packageName) {
 		// Zip file generator
 		try {
-			String fileName = "./target/" + autoGenerateRequest.getProjectDetails().getProjectName();
-			ZipDirectoryHelper.generateZip(fileName);
+			String fileName = location + autoGenerateRequest.getProjectDetails().getProjectName();
+			ZipDirectoryHelper.generateZip(fileName, location);
 			new File(fileName).deleteOnExit();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		String filePath = "./target/" + autoGenerateRequest.getProjectDetails().getProjectName();
-		Path file = Paths.get("./target/", autoGenerateRequest.getProjectDetails().getProjectName() + ".zip");
+		String filePath = location + autoGenerateRequest.getProjectDetails().getProjectName();
+		Path file = Paths.get(location, autoGenerateRequest.getProjectDetails().getProjectName() + ".zip");
 		if (Files.exists(file)) {
 			response.setHeader("Content-Type", "application/zip");
 			response.addHeader("Content-Disposition",

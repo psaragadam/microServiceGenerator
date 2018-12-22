@@ -12,14 +12,14 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipDirectoryHelper {
 
-	public static void generateZip(String path) throws IOException {
+	public static void generateZip(String path, String location) throws IOException {
 		File directoryToZip = new File(path);
 
 		List<File> fileList = new ArrayList<File>();
 		System.out.println("---Getting references to all files in: " + directoryToZip.getCanonicalPath());
 		getAllFiles(directoryToZip, fileList);
 		System.out.println("---Creating zip file");
-		writeZipFile(directoryToZip, fileList);
+		writeZipFile(directoryToZip, fileList, location);
 		System.out.println("---Done");
 	}
 
@@ -39,10 +39,10 @@ public class ZipDirectoryHelper {
 		}
 	}
 
-	public static void writeZipFile(File directoryToZip, List<File> fileList) {
+	public static void writeZipFile(File directoryToZip, List<File> fileList, String location) {
 
 		try {
-			FileOutputStream fos = new FileOutputStream("./target/"+directoryToZip.getName() + ".zip");
+			FileOutputStream fos = new FileOutputStream(location +directoryToZip.getName() + ".zip");
 			ZipOutputStream zos = new ZipOutputStream(fos);
 
 			for (File file : fileList) {
