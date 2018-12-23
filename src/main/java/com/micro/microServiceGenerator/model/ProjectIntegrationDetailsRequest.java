@@ -5,6 +5,7 @@ public class ProjectIntegrationDetailsRequest {
 	private boolean hasJunit;
 	private boolean hasJPA;
 	private boolean hasRestTemplate;
+	private boolean hasProfiling;
 
 	public boolean isHasSwagger() {
 		return hasSwagger;
@@ -36,6 +37,14 @@ public class ProjectIntegrationDetailsRequest {
 
 	public void setHasRestTemplate(boolean hasRestTemplate) {
 		this.hasRestTemplate = hasRestTemplate;
+	}
+
+	public boolean isHasProfiling() {
+		return hasProfiling;
+	}
+
+	public void setHasProfiling(boolean hasProfiling) {
+		this.hasProfiling = hasProfiling;
 	}
 
 }

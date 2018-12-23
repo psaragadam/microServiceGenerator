@@ -8,8 +8,10 @@
 		"hasJPA": true,
 		"hasJunit": true,
 		"hasSwagger": true,
-		"hasRestTemplate": true
+		"hasRestTemplate": true,
+		"hasProfiling": true
 	},
+	"springProfile": "dev",
 	"models": [
 		{
 			"jsonFormat": true,

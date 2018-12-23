@@ -28,8 +28,8 @@ import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 
 @Service
 public class AutoGeneratorService {
-	
-	private String location="./target/";
+
+	private String location = "./target/";
 
 	public void generateService(AutoGenerateRequest autoGenerateRequest, HttpServletResponse response) {
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
@@ -47,8 +47,7 @@ public class AutoGeneratorService {
 		generateZip(response, autoGenerateRequest, projectName, packageName);
 	}
 
-	private void buildMainServices(String projectName, String packageName,
-			AutoGenerateRequest autoGenerateRequest) {
+	private void buildMainServices(String projectName, String packageName, AutoGenerateRequest autoGenerateRequest) {
 		// project directory generation
 		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, "target\\");
 		// pom.xml generation
@@ -56,13 +55,10 @@ public class AutoGeneratorService {
 		// Micro service main App
 		MainAppGeneratorHelper.generateMainApplication(projectName, packageName, location);
 		// Application properties file
-		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,
-				autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA(),
-				location);
+		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName, autoGenerateRequest, location);
 	}
 
-	private void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
-			String packageName) {
+	private void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName, String packageName) {
 		boolean hasJPA = autoGenerateRequest.getIntegrationDetails().isHasJPA();
 		// Micro service main model, service, controller generation
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
@@ -97,8 +93,8 @@ public class AutoGeneratorService {
 		}
 	}
 
-	private void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
-			String projectName, String packageName) {
+	private void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest, String projectName,
+			String packageName) {
 		// Zip file generator
 		try {
 			String fileName = location + autoGenerateRequest.getProjectDetails().getProjectName();
