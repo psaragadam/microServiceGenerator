@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
+import com.micro.microServiceGenerator.helper.ApplicationConfigGenerateHelper;
 import com.micro.microServiceGenerator.helper.ApplicationPropertiesGenerateHelper;
 import com.micro.microServiceGenerator.helper.ControllerGenerateHelper;
 import com.micro.microServiceGenerator.helper.EntityCreationHelper;
@@ -18,77 +19,93 @@ import com.micro.microServiceGenerator.helper.MainAppGeneratorHelper;
 import com.micro.microServiceGenerator.helper.ModelCreationHelper;
 import com.micro.microServiceGenerator.helper.PomGeneratorHelper;
 import com.micro.microServiceGenerator.helper.ProjectFolderGenerateHelper;
+import com.micro.microServiceGenerator.helper.RestServiceGeneratorHelper;
 import com.micro.microServiceGenerator.helper.ServiceGenerateHelper;
 import com.micro.microServiceGenerator.helper.SwaggerGenerateHelper;
 import com.micro.microServiceGenerator.helper.ZipDirectoryHelper;
 import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 
-
 @Service
 public class AutoGeneratorService {
+
+	private String location = "./target/";
 
 	public void generateService(AutoGenerateRequest autoGenerateRequest, HttpServletResponse response) {
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 
 		// build project folder project structure and mainApp
-		buildMainServices(projectName, packageName,  autoGenerateRequest );
+		buildMainServices(projectName, packageName, autoGenerateRequest);
 
 		// Micro service main model, service, controller generation
 		buildModuleServices(autoGenerateRequest, projectName, packageName);
-				
+
 		// Micro service JPA and other integration details
-		buildIntegrationServices(projectName, packageName, autoGenerateRequest);
+		buildIntegrationServices(autoGenerateRequest);
 
 		generateZip(response, autoGenerateRequest, projectName, packageName);
 	}
 
-	private static void buildMainServices(String projectName, String packageName, AutoGenerateRequest autoGenerateRequest) {
+	private void buildMainServices(String projectName, String packageName, AutoGenerateRequest autoGenerateRequest) {
 		// project directory generation
-		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName);
+		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, "target\\");
 		// pom.xml generation
-		PomGeneratorHelper.generatePomFile(projectName, packageName);
+		PomGeneratorHelper.generatePomFile(autoGenerateRequest, location);
 		// Micro service main App
-		MainAppGeneratorHelper.generateMainApplication(projectName, packageName);
-		//Application properties file 
-		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,autoGenerateRequest.getJpaProperties());
+		MainAppGeneratorHelper.generateMainApplication(projectName, packageName, location);
+		// Application properties file
+		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName, autoGenerateRequest, location);
 	}
 
-	private static void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
-			String packageName) {
+	private void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName, String packageName) {
+		boolean hasJPA = autoGenerateRequest.getIntegrationDetails().isHasJPA();
 		// Micro service main model, service, controller generation
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
-			ModelCreationHelper.generateModels(projectName, packageName, model.getModelName(), model.getFields());
+			ModelCreationHelper.generateModels(projectName, packageName, model.getModelName(), model.getFields(),
+					location);
 			// Controller generator
-			ControllerGenerateHelper.generateController(projectName, packageName, model.getModelName());
+			ControllerGenerateHelper.generateController(projectName, packageName, model.getModelName(), hasJPA,
+					location);
 			// Service generator
-			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName());
+			ServiceGenerateHelper.generateService(projectName, packageName, model.getModelName(), hasJPA, location);
 		}
-		//Entity generator
-		EntityCreationHelper.generateModels(autoGenerateRequest);
+		// Entity generator
+		if (hasJPA) {
+			EntityCreationHelper.generateModels(autoGenerateRequest, location);
+		}
 	}
 
-	private static void buildIntegrationServices(String projectName, String packageName,AutoGenerateRequest autoGenerateRequest) {
-		// SWAGGER config generator changes
-		SwaggerGenerateHelper.generateSwagger(projectName, packageName);
+	private void buildIntegrationServices(AutoGenerateRequest autoGenerateRequest) {
 		// JPA
-		JPAGenerateHelper.generateRespository(projectName, packageName, autoGenerateRequest);
+		if (autoGenerateRequest.getIntegrationDetails().isHasJPA()) {
+			JPAGenerateHelper.generateRespository(autoGenerateRequest, location);
+		}
+		// SWAGGER config generator changes
+		if (autoGenerateRequest.getIntegrationDetails().isHasSwagger()) {
+			SwaggerGenerateHelper.generateSwagger(autoGenerateRequest.getProjectDetails().getProjectName(),
+					autoGenerateRequest.getProjectDetails().getPackageName(), location);
+		}
+		ApplicationConfigGenerateHelper.generateConfig(autoGenerateRequest, location);
+		if (autoGenerateRequest.getIntegrationDetails().isHasRestTemplate()) {
+			RestServiceGeneratorHelper.generateRestService(autoGenerateRequest.getProjectDetails().getProjectName(),
+					autoGenerateRequest.getProjectDetails().getPackageName(), location);
+		}
 	}
 
-	private static void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
-			String projectName, String packageName) {
+	private void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest, String projectName,
+			String packageName) {
 		// Zip file generator
 		try {
-			String fileName = "./target/" + autoGenerateRequest.getProjectDetails().getProjectName();
-			ZipDirectoryHelper.generateZip(fileName);
+			String fileName = location + autoGenerateRequest.getProjectDetails().getProjectName();
+			ZipDirectoryHelper.generateZip(fileName, location);
 			new File(fileName).deleteOnExit();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		String filePath = "./target/" + autoGenerateRequest.getProjectDetails().getProjectName();
-		Path file = Paths.get("./target/", autoGenerateRequest.getProjectDetails().getProjectName() + ".zip");
+		String filePath = location + autoGenerateRequest.getProjectDetails().getProjectName();
+		Path file = Paths.get(location, autoGenerateRequest.getProjectDetails().getProjectName() + ".zip");
 		if (Files.exists(file)) {
 			response.setHeader("Content-Type", "application/zip");
 			response.addHeader("Content-Disposition",

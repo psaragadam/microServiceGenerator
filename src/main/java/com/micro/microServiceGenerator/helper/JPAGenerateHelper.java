@@ -16,9 +16,9 @@ import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 public class JPAGenerateHelper {
 	
 
-	public static void generateRespository(String projectName, String packageName,
-			AutoGenerateRequest autoGenerateRequest) {
-
+	public static void generateRespository(AutoGenerateRequest autoGenerateRequest, String location) {
+		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
+		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
 			StringBuilder builder = new StringBuilder();
 			String className = model.getModelName().substring(0, 1).toUpperCase() + model.getModelName().substring(1);
@@ -38,7 +38,7 @@ public class JPAGenerateHelper {
 			try {
 				List<String> lines = Arrays.asList(builder.toString());
 
-				Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/"
+				Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/"
 						+ packageName + "/repository/" + repoClassName + ".java");
 
 				Files.write(file, lines, Charset.forName("UTF-8"));
