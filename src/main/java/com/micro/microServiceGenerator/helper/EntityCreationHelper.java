@@ -61,7 +61,7 @@ public class EntityCreationHelper {
 		return build.toString();
 	}
 
-	public static void generateModels(AutoGenerateRequest autoGenerateRequest) {
+	public static void generateModels(AutoGenerateRequest autoGenerateRequest, String location) {
 		String projectName=autoGenerateRequest.getProjectDetails().getProjectName();
 		String packageName=autoGenerateRequest.getProjectDetails().getPackageName();
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
@@ -74,7 +74,7 @@ public class EntityCreationHelper {
 					
 					List<String> lines = Arrays.asList("package com."+packageName+".entity;", importGenerator() , entity+ "public class " + className + " {\n\n",
 							propertyGenerator(property, false), "\n}");
-					Path file = Paths.get("./target/"+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/entity/" + className + ".java"); 
+					Path file = Paths.get(location+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/entity/" + className + ".java"); 
 					Files.write(file, lines, Charset.forName("UTF-8"));
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -10,15 +10,15 @@ import java.util.List;
 
 public class ControllerGenerateHelper {
 	
-	public static void generateController(String projectName, String packageName, String modelName) {
+	public static void generateController(String projectName, String packageName, String modelName, boolean hasJPA, String location) {
 		try {
 			String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 			String packageNameValue = "package com." + packageName + ".controller;";
-			StringBuilder imports = buildImports(packageName, className);
-			StringBuilder classDef = buildClassDef(packageName, className, modelName );
+			StringBuilder imports = buildImports(packageName, className, hasJPA);
+			StringBuilder classDef = buildClassDef(packageName, className, modelName, hasJPA);
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
-			Path file = Paths.get("./target/" + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
 					+ "/controller/" + className + "Controller.java");
 
 			Files.write(file, lines, Charset.forName("UTF-8"));
@@ -27,18 +27,22 @@ public class ControllerGenerateHelper {
 		}
 	}
 	
-	public static String generateControllerDisplay(String projectName, String packageName, String modelName) {
+	public static String generateControllerDisplay(String projectName, String packageName, String modelName, boolean hasJPA) {
 			String className = modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
 			String packageNameValue = "package com." + packageName + ".controller;";
-			StringBuilder imports = buildImports(packageName, className);
-			StringBuilder classDef = buildClassDef(packageName, className,modelName );
+			StringBuilder imports = buildImports(packageName, className, hasJPA);
+			StringBuilder classDef = buildClassDef(packageName, className,modelName, hasJPA);
 			return  packageNameValue + " \n" + imports.toString() + "\n"+ classDef.toString();
 	}
 	
 	
-	private static StringBuilder buildImports(String packageName, String className) {
+	private static StringBuilder buildImports(String packageName, String className, boolean hasJPA) {
 		StringBuilder build = new StringBuilder();
-		build.append("\n\nimport com." + packageName+".entity."+ className+";\r\n");
+		if (hasJPA) {
+			build.append("\n\nimport com." + packageName+".entity."+ className+";\r\n");
+		} else {
+			build.append("\n\nimport com." + packageName+".domain."+ className+";\r\n");
+		}
 		build.append("import com." + packageName+".service."+ className+"Service;\r\n");
 		build.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
 		build.append("import org.springframework.http.MediaType;\r\n");
@@ -52,7 +56,7 @@ public class ControllerGenerateHelper {
 	}
 	
 	
-	private static StringBuilder buildClassDef(String packageName, String className, String modelName) {
+	private static StringBuilder buildClassDef(String packageName, String className, String modelName, boolean hasJPA) {
 		String serviceName= className +"Service";
 		String serviceInstanceName= modelName +"Service";
 		StringBuilder build = new StringBuilder();
@@ -62,9 +66,11 @@ public class ControllerGenerateHelper {
 		build.append("\t @Autowired\n");
 		build.append("\t private "+serviceName + " "+ serviceInstanceName +";\n\n");
 		build.append(buildCreateMethod(packageName,  className,  modelName));
-		build.append(buildGetMethod(packageName,  className,  modelName));
-		build.append(buildUpdateMethod(packageName,  className,  modelName));
-		build.append(buildDeleteMethod(packageName,  className,  modelName));
+		if (hasJPA) {
+			build.append(buildGetMethod(packageName,  className,  modelName));
+			build.append(buildUpdateMethod(packageName,  className,  modelName));
+			build.append(buildDeleteMethod(packageName,  className,  modelName));
+		}
 		build.append("\n}\n");
 		return build;
 	}
@@ -140,7 +146,7 @@ public class ControllerGenerateHelper {
 	
 	
    public static void main(String[] args) {
-	  System.out.println(generateControllerDisplay("Town", "town", "person"));
+	  System.out.println(generateControllerDisplay("Town", "town", "person", true));
    }
 	
 

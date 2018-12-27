@@ -10,11 +10,11 @@ import java.util.List;
 
 public class MainAppGeneratorHelper {
 
-	public static void generateMainApplication(String projectName, String packageName) {
-		generateModels(projectName, packageName);
+	public static void generateMainApplication(String projectName, String packageName, String location) {
+		generateModels(projectName, packageName, location);
 	}
 
-	public static void generateModels(String projectName, String packageName) {
+	public static void generateModels(String projectName, String packageName, String location) {
 		try {
 			String className = projectName.substring(0, 1).toUpperCase() + projectName.substring(1) +"MainApplication";
 			List<String> lines = Arrays.asList("package com." + packageName + ";",
@@ -22,7 +22,7 @@ public class MainAppGeneratorHelper {
 							+ "import org.springframework.boot.autoconfigure.SpringBootApplication;\n\n",
 					"@SpringBootApplication", "public class " + className + " {\n\n", bodyGenerator(className),
 					"\n}");
-			Path file = Paths.get("./target/"+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/" + className + ".java");
+			Path file = Paths.get(location+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/" + className + ".java");
 
 			Files.write(file, lines, Charset.forName("UTF-8"));
 		} catch (IOException e) {
