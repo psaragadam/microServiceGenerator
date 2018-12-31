@@ -1,12 +1,16 @@
 package com.micro.microServiceGenerator.helper;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 public class RestServiceGeneratorHelper {
 
@@ -18,10 +22,17 @@ public class RestServiceGeneratorHelper {
 
 			List<String> lines = Arrays.asList(packageNameValue, imports.toString(), classDef.toString());
 
-			Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			//Path file = Paths.get(URI.create(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
+			//		+ "/rest/RestService.java"));
+			//Files.write(file, lines, Charset.forName("UTF-8")); 
+			StringBuilder builder=new StringBuilder();
+			builder.append(packageNameValue);
+			builder.append(imports.toString());
+			builder.append(classDef.toString());
+			File file=new File(location + projectName + "/" + projectName + "/src/main/java/com/" + packageName
 					+ "/rest/RestService.java");
-
-			Files.write(file, lines, Charset.forName("UTF-8"));
+			FileUtils.writeStringToFile(file, builder.toString());
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

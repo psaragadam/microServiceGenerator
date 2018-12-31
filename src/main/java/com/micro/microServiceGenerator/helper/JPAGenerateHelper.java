@@ -1,12 +1,16 @@
 package com.micro.microServiceGenerator.helper;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 import com.micro.microServiceGenerator.model.ModelDetailsRequest;
@@ -36,12 +40,15 @@ public class JPAGenerateHelper {
 			builder.append(" { \r\n\n\n");
 			builder.append("}\r\n");
 			try {
-				List<String> lines = Arrays.asList(builder.toString());
+				//List<String> lines = Arrays.asList(builder.toString());
 
-				Path file = Paths.get(location + projectName + "/" + projectName + "/src/main/java/com/"
+				//Path file = Paths.get(URI.create(location + projectName + "/" + projectName + "/src/main/java/com/"
+				//		+ packageName + "/repository/" + repoClassName + ".java"));
+				//Files.write(file, lines, Charset.forName("UTF-8"));
+				
+				File file=new File(location + projectName + "/" + projectName + "/src/main/java/com/"
 						+ packageName + "/repository/" + repoClassName + ".java");
-
-				Files.write(file, lines, Charset.forName("UTF-8"));
+				FileUtils.writeStringToFile(file, builder.toString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

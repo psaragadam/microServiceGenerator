@@ -1,12 +1,16 @@
 package com.micro.microServiceGenerator.helper;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 public class SwaggerGenerateHelper {
 
@@ -40,10 +44,13 @@ public class SwaggerGenerateHelper {
 					"    }\r\n" + 
 					"}\n");
 			
-			List<String> lines = Arrays.asList(builder.toString());
-			Path file = Paths.get(location +projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/config/SwaggerConfig.java");
+			//List<String> lines = Arrays.asList(builder.toString());
+			//Path file = Paths.get(URI.create(location +projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/config/SwaggerConfig.java"));
 
-			Files.write(file, lines, Charset.forName("UTF-8"));
+			//Files.write(file, lines, Charset.forName("UTF-8")); 
+			
+			File file=new File(location +projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/config/SwaggerConfig.java");
+			FileUtils.writeStringToFile(file, builder.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,12 +1,16 @@
 package com.micro.microServiceGenerator.helper;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 import com.micro.microServiceGenerator.model.DBPropertiesRequest;
@@ -35,10 +39,14 @@ public class ApplicationPropertiesGenerateHelper {
 					builder.append("spring.jpa.hibernate.ddl-auto = " + properties.getDdl_Auto() + "\n");
 				}
 			}
-			List<String> lines = Arrays.asList(builder.toString());
-			Path file = Paths
-					.get(location + projectName + "/" + projectName + "/src/main/resources/application.properties");
-			Files.write(file, lines, Charset.forName("UTF-8"));
+			//List<String> lines = Arrays.asList(builder.toString());
+			//Path file = Paths
+			//		.get(URI.create(location + projectName + "/" + projectName + "/src/main/resources/application.properties"));
+			//Files.write(file, lines, Charset.forName("UTF-8"));
+			
+			File file=new File(location + projectName + "/" + projectName + "/src/main/resources/application.properties");
+			FileUtils.writeStringToFile(file, builder.toString());
+
 
 			if (hasProfiling) {
 				for (String profile : autoGenerateRequest.getProfilesList()) {
@@ -50,10 +58,12 @@ public class ApplicationPropertiesGenerateHelper {
 						builder.append("spring.jpa.properties.hibernate.dialect = " + properties.getDialect() + "\n");
 						builder.append("spring.jpa.hibernate.ddl-auto = " + properties.getDdl_Auto() + "\n");
 					}
-					lines = Arrays.asList(builder.toString());
-					file = Paths.get(location + projectName + "/" + projectName + "/src/main/resources/application-"
-							+ profile + ".properties");
-					Files.write(file, lines, Charset.forName("UTF-8"));
+					//lines = Arrays.asList(builder.toString());
+					//file = Paths.get(location + projectName + "/" + projectName + "/src/main/resources/application-"
+					//		+ profile + ".properties");
+					//Files.write(file, lines, Charset.forName("UTF-8"));
+					file=new File(location + projectName + "/" + projectName + "/src/main/resources/application-"+ profile + ".properties");
+					FileUtils.writeStringToFile(file, builder.toString());
 				}
 			}
 		} catch (IOException e) {

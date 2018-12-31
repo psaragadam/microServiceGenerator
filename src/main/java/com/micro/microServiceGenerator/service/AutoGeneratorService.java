@@ -29,9 +29,10 @@ import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 @Service
 public class AutoGeneratorService {
 
-	private String location = "./target/";
+	private String location = System.getProperty("user.dir")+"\\";
 
 	public void generateService(AutoGenerateRequest autoGenerateRequest, HttpServletResponse response) {
+		System.out.println("================= user.dir:"+ System.getProperty("user.dir"));
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 
@@ -49,9 +50,9 @@ public class AutoGeneratorService {
 
 	private void buildMainServices(String projectName, String packageName, AutoGenerateRequest autoGenerateRequest) {
 		// project directory generation
-		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, "target\\");
+		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, location);//"target\\");
 		// pom.xml generation
-		PomGeneratorHelper.generatePomFile(autoGenerateRequest, location);
+		new PomGeneratorHelper().generatePomFile(autoGenerateRequest, location);
 		// Micro service main App
 		MainAppGeneratorHelper.generateMainApplication(projectName, packageName, location);
 		// Application properties file
