@@ -1,3 +1,12 @@
+# microServiceGenerator
+
+MicroServiceGenerator application helps to generate micro service application automatically based on business details. 
+
+We have to provide business details through front end application or json for for this API. we are getting zip file as project.
+
+we can extract that file, we can just build and deploy into server. If you need you can modify application.
+
+
 {
 	"downloadDetails": {
 		"jarDownload": true,
@@ -65,9 +74,9 @@
 		"projectName": "customerApplicationRest"
 	},
 	"jpaProperties": {
-		"url": "jdbc:mysql://localhost:3306/test?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false",
-		"userName": "root",
-		"password": "123456",
+		"url": "jdbc:******",
+		"userName": "*****",
+		"password": "******",
 		"dialect": "org.hibernate.dialect.MySQL5InnoDBDialect",
 		"ddl_Auto": "update"
 	}

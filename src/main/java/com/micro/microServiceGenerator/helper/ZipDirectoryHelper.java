@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
+
 public class ZipDirectoryHelper {
 
 	public static void generateZip(String path, String location) throws IOException {
@@ -87,7 +89,7 @@ public class ZipDirectoryHelper {
 		File zipFile = new File(path);
 		if(zipFile.exists()) {
 			System.out.println("file exists");
-			zipFile.deleteOnExit();
+			System.out.println(zipFile.delete());
 		}else {
 			System.out.println("zip file doesn't exists at "+ path);
 		}
@@ -99,12 +101,24 @@ public class ZipDirectoryHelper {
 		if(dir.isDirectory() == false) {
 			System.out.println("Not a directory. Do nothing");
 			return;
+		}else {
+			try {
+				System.out.println("Deleting "+ path);
+				FileUtils.deleteDirectory(dir);
+				System.out.println("Deleted "+ path);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+						
+			//dir.delete();
+			/*File[] listFiles = dir.listFiles();
+			for(File file : listFiles){
+				System.out.println("Deleting "+file.getAbsolutePath());
+				System.out.println("File deleting  status:"+ file.delete());
+			}*/
 		}
-		File[] listFiles = dir.listFiles();
-		for(File file : listFiles){
-			System.out.println("Deleting "+file.getAbsolutePath());
-			file.delete();
-		}
+		
 	}
 
 }

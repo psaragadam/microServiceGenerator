@@ -28,10 +28,11 @@ import com.micro.microServiceGenerator.model.ModelDetailsRequest;
 
 @Service
 public class AutoGeneratorService {
-	
-	private String location="./target/";
+
+	private String location = System.getProperty("user.dir")+"\\";
 
 	public void generateService(AutoGenerateRequest autoGenerateRequest, HttpServletResponse response) {
+		System.out.println("================= user.dir:"+ System.getProperty("user.dir"));
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 
@@ -47,22 +48,18 @@ public class AutoGeneratorService {
 		generateZip(response, autoGenerateRequest, projectName, packageName);
 	}
 
-	private void buildMainServices(String projectName, String packageName,
-			AutoGenerateRequest autoGenerateRequest) {
+	private void buildMainServices(String projectName, String packageName, AutoGenerateRequest autoGenerateRequest) {
 		// project directory generation
-		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, "target\\");
+		ProjectFolderGenerateHelper.generateRootFolders(projectName, packageName, location);//"target\\");
 		// pom.xml generation
-		PomGeneratorHelper.generatePomFile(autoGenerateRequest, location);
+		new PomGeneratorHelper().generatePomFile(autoGenerateRequest, location);
 		// Micro service main App
 		MainAppGeneratorHelper.generateMainApplication(projectName, packageName, location);
 		// Application properties file
-		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName,
-				autoGenerateRequest.getJpaProperties(), autoGenerateRequest.getIntegrationDetails().isHasJPA(),
-				location);
+		ApplicationPropertiesGenerateHelper.generateApplicationProperties(projectName, autoGenerateRequest, location);
 	}
 
-	private void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName,
-			String packageName) {
+	private void buildModuleServices(AutoGenerateRequest autoGenerateRequest, String projectName, String packageName) {
 		boolean hasJPA = autoGenerateRequest.getIntegrationDetails().isHasJPA();
 		// Micro service main model, service, controller generation
 		for (ModelDetailsRequest model : autoGenerateRequest.getModels()) {
@@ -97,8 +94,8 @@ public class AutoGeneratorService {
 		}
 	}
 
-	private void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest,
-			String projectName, String packageName) {
+	private void generateZip(HttpServletResponse response, AutoGenerateRequest autoGenerateRequest, String projectName,
+			String packageName) {
 		// Zip file generator
 		try {
 			String fileName = location + autoGenerateRequest.getProjectDetails().getProjectName();

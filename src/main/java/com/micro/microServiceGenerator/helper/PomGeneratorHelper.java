@@ -1,6 +1,8 @@
 package com.micro.microServiceGenerator.helper;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,19 +11,26 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
+import org.springframework.util.ResourceUtils;
+
 import com.micro.microServiceGenerator.model.AutoGenerateRequest;
 
 public class PomGeneratorHelper {
 
-	public static void generatePomFile(AutoGenerateRequest autoGenerateRequest, String location) {
+	public void generatePomFile(AutoGenerateRequest autoGenerateRequest, String location) {
 		String projectName = autoGenerateRequest.getProjectDetails().getProjectName();
 		String packageName = autoGenerateRequest.getProjectDetails().getPackageName();
 		try {
 			packageName = "com." + packageName;
-			String pomXml = Files.lines(Paths.get("./src/main/resources/pom.xml")).collect(Collectors.joining("\n"));
+			//String pomXml = Files.lines(Paths.get("./src/main/resources/pom.xml")).collect(Collectors.joining("\n"));
+			File pomFile = ResourceUtils.getFile(this.getClass().getResource("/pom.xml"));
+			String pomXml = FileUtils.readFileToString(pomFile);
 			pomXml = MessageFormat.format(pomXml, packageName, projectName,"jar", projectName, buildDependencies(autoGenerateRequest));
-			Path file = Paths.get(location + projectName + "/"+ projectName + "/pom.xml");
-			Files.write(file, Arrays.asList(pomXml), Charset.forName("UTF-8"));
+			File file=new File(location + projectName + "/"+ projectName + "/pom.xml");
+			FileUtils.writeStringToFile(file, pomXml);
+			//Path file = Paths.get(URI.create(location + projectName + "\\"+ projectName + "\\pom.xml"));
+			//Files.write(file, Arrays.asList(pomXml), Charset.forName("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

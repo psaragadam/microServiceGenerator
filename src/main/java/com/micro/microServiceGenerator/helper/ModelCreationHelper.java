@@ -1,6 +1,8 @@
 package com.micro.microServiceGenerator.helper;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +10,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.micro.microServiceGenerator.model.Field;
 
@@ -18,10 +22,19 @@ public class ModelCreationHelper {
 	public static void generateModels(String projectName, String packageName, String modelName, List<Field> property, String location) {
 		try {
 			String className = modelName.substring(0, 1).toUpperCase()+ modelName.substring(1);
-			List<String> lines = Arrays.asList("package com."+packageName+".domain;\n", "import java.util.*;\n", "public class " + className + " {\n\n",
-					propertyGenerator(property, false), "\n}");
-			Path file = Paths.get(location+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/domain/" + className + ".java"); 
-			Files.write(file, lines, Charset.forName("UTF-8"));
+			//List<String> lines = Arrays.asList("package com."+packageName+".domain;\n", "import java.util.*;\n", "public class " + className + " {\n\n",
+			//		propertyGenerator(property, false), "\n}");
+			//Path file = Paths.get(URI.create(location+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/domain/" + className + ".java")); 
+			//Files.write(file, lines, Charset.forName("UTF-8"));
+			StringBuilder builder=new StringBuilder();
+			builder.append("package com."+packageName+".domain;\n");
+			builder.append("import java.util.*;\n");
+			builder.append("public class " + className + " {\n\n");
+			builder.append(propertyGenerator(property, false));
+			builder.append("\n}");
+			File file=new File(location+projectName+"/"+projectName+"/src/main/java/com/"+ packageName +"/domain/" + className + ".java");
+			FileUtils.writeStringToFile(file, builder.toString());
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
