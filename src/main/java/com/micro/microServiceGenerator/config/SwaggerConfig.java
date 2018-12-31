@@ -26,7 +26,7 @@ public class SwaggerConfig {
           .apis(RequestHandlerSelectors.any())
           .paths(PathSelectors.any())                          
           .build().enable(true);                                           
-    } 
+    }
     
     private ApiInfo apiInfo() {
 		return new ApiInfo("MicroServiceGenerator",
