@@ -60,7 +60,7 @@ public class PomGeneratorHelper {
 			builder.append("<version>0.4.11</version>\r\n");
 			builder.append("<configuration>\r\n");
 			builder.append("<skipDockerBuild>false</skipDockerBuild>\r\n");
-			builder.append("<imageName>twilio-sms</imageName>\r\n");
+			builder.append("<imageName>${project.build.finalName}-image</imageName>\r\n");
 			builder.append("<newName>docker.io/${project.artifactId}:${project.version}</newName>\r\n");
 			builder.append("<!-- not needed when you enable executions -->\r\n");
 			builder.append("<dockerDirectory>src/main/docker</dockerDirectory>\r\n");
