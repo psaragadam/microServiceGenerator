@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.micro.microServiceGenerator.helper.ApplicationConfigGenerateHelper;
 import com.micro.microServiceGenerator.helper.ApplicationPropertiesGenerateHelper;
 import com.micro.microServiceGenerator.helper.ControllerGenerateHelper;
+import com.micro.microServiceGenerator.helper.DockerGenerateHelper;
 import com.micro.microServiceGenerator.helper.EntityCreationHelper;
 import com.micro.microServiceGenerator.helper.JPAGenerateHelper;
 import com.micro.microServiceGenerator.helper.MainAppGeneratorHelper;
@@ -91,6 +92,11 @@ public class AutoGeneratorService {
 		if (autoGenerateRequest.getIntegrationDetails().isHasRestTemplate()) {
 			RestServiceGeneratorHelper.generateRestService(autoGenerateRequest.getProjectDetails().getProjectName(),
 					autoGenerateRequest.getProjectDetails().getPackageName(), location);
+		} 
+		
+		if(autoGenerateRequest.getIntegrationDetails().isHasDocker()) {
+			DockerGenerateHelper.generateDockerGenerateHelper(autoGenerateRequest.getProjectDetails().getProjectName(),
+					autoGenerateRequest, location);
 		}
 	}
 

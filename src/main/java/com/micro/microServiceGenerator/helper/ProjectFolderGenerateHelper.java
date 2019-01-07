@@ -20,8 +20,9 @@ public class ProjectFolderGenerateHelper {
 				storageLocation + projectName + "\\src\\main\\java\\com\\" + packageName + "\\rest").mkdirs();
 		boolean config = new File(storageLocation + projectName + "\\src\\main\\java\\com\\" + packageName + "\\config")
 				.mkdirs();
-		boolean properties = new File(storageLocation + projectName + "\\src\\main\\resources")
-				.mkdirs();
+		boolean properties = new File(storageLocation + projectName + "\\src\\main\\resources").mkdirs(); 
+		boolean dockerLocation = new File(storageLocation + projectName + "\\src\\main\\docker").mkdirs();
+		
 	}
 
 }

@@ -6,6 +6,7 @@ public class ProjectIntegrationDetailsRequest {
 	private boolean hasJPA;
 	private boolean hasRestTemplate;
 	private boolean hasProfiling;
+	private boolean hasDocker;
 
 	public boolean isHasSwagger() {
 		return hasSwagger;
@@ -45,6 +46,14 @@ public class ProjectIntegrationDetailsRequest {
 
 	public void setHasProfiling(boolean hasProfiling) {
 		this.hasProfiling = hasProfiling;
+	}
+
+	public boolean isHasDocker() {
+		return hasDocker;
+	}
+
+	public void setHasDocker(boolean hasDocker) {
+		this.hasDocker = hasDocker;
 	}
 
 }
